@@ -4,11 +4,15 @@ require('module-alias/register')
 const m_utils = require('@test/libs/utils')
 
 module.exports = {
-  send_recovery_email: async email => {
+  get_tests: async () => {
     return m_utils.getter({
       query: `
         query {
-          send_recovery_email(login: "${email}")
+          get_tests {
+            value_number
+            value_string
+            value_boolean
+          }
         }`
     })
   }
