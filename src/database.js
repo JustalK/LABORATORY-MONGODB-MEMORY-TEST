@@ -59,8 +59,8 @@ module.exports = {
   * @param {string} db_username The username of the db
   * @param {string} db_password The password of the db
   **/
-  mongoose_connect: (db_name, db_uri, db_username, db_password) => {
-    const db_data = module.exports.parse_db_uri(db_name, db_uri, db_username, db_password)
+  mongoose_connect: (db_name, db_uri, db_username, db_password, db_auth = '') => {
+    const db_data = module.exports.parse_db_uri(db_name, db_uri, db_username, db_password, db_auth)
     const db_uri_data = module.exports.create_mongo_uri(db_data)
 
     mongoose.connect(db_uri_data, { useFindAndModify: false, useNewUrlParser: true, useUnifiedTopology: true })

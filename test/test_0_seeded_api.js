@@ -10,11 +10,10 @@ const m_seeding = require('@seeding/seeder')
 const queries_user = require('@test/queries/user')
 const queries_auth = require('@test/queries/auth')
 const queries_config = require('@test/queries/config')
-const queries_email = require('@test/queries/email')
 
 test.before(async () => {
   await m.start()
-  await m_seeding.seed()
+  await m_seeding.seed('tests')
 })
 
 test('[ADMIN] Login', async t => {

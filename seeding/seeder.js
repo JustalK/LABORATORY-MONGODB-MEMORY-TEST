@@ -35,6 +35,6 @@ module.exports = {
       path.resolve('./seeding/' + folder),
       collectionReadingOptions
     )
-    await seeder.import(collections)
+    seeder.import(collections)
   }
 }
