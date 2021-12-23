@@ -25,14 +25,6 @@ module.exports = gql`
       email: String): [User]! @isLoggedIn
 
     """
-    Get recovery email from login\n
-    Send an email inviting the user to change his password
-    """
-    send_recovery_email(
-      "The login or the email of the user"
-      login: String!): String!
-
-    """
     Get User from recover token\n
     A recover token is a token gotten when the user asked for a new password
     """

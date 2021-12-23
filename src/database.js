@@ -16,7 +16,7 @@ module.exports = {
   * @param {string} db_password The password of the db
   * @return {Object} The data of the db
   **/
-  parse_db_uri: (db_name, db_uri, db_username, db_password) => {
+  parse_db_uri: (db_name, db_uri, db_username, db_password, db_auth = '') => {
     db_uri += db_name
     const split_uri = db_uri.split('/')
 
@@ -26,6 +26,7 @@ module.exports = {
     db_data.port = split_uri[2].split(':')[1]
     db_data.username = db_username
     db_data.password = db_password
+    db_data.authsource = db_auth
 
     return db_data
   },
@@ -35,13 +36,21 @@ module.exports = {
   * @return {Object} The mongo uri object
   **/
   create_mongo_uri: db_data => {
-    return mongo_uri_builder({
+    const config = {
       username: db_data.username,
       password: db_data.password,
       host: db_data.host,
       port: db_data.port,
       database: db_data.db
-    })
+    }
+
+    if (db_data.authsource) {
+      config.options = {
+        authSource: db_data.authsource
+      }
+    }
+
+    return mongo_uri_builder(config)
   },
   /**
   * Connect the app to the database

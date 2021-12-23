@@ -103,33 +103,6 @@ test('[XXX] Trying to edit admin user', async t => {
   t.is(response.errors[0].message, 'This account cannot be edited with this request.')
 })
 
-test('[USER] Trying to Forget password on inexisting user', async t => {
-  const response = await queries_email.send_recovery_email('idontreallycare.iamnotworking@gmail.com')
-  t.is(response.errors[0].message, 'This account does not exist.')
-})
-
-test('[USER] Forget password and change password', async t => {
-  const response_creation_user = await queries_user.create_new_random_user({ email: 'justal.kevin@gmail.com' })
-  const response_token = await queries_email.send_recovery_email('justal.kevin@gmail.com')
-  const token = response_token.send_recovery_email
-  t.not(token, undefined)
-
-  const response_user = await queries_user.get_user_from_token(token)
-  t.is(response_user.get_user_from_token._id, response_creation_user.signing.user._id)
-  t.is(response_user.get_user_from_token.username, response_creation_user.signing.user.username)
-
-  await queries_user.change_password_user('Qwerty10@10', token)
-  const response_login = await queries_auth.login_user('justal.kevin@gmail.com', 'Qwerty10@10')
-  t.is(response_login.login.user.username, response_creation_user.signing.user.username)
-  t.is(response_login.login.user.email, 'justal.kevin@gmail.com')
-})
-
-test('[USER] Trying to forget password with an existing valid recover token already created', async t => {
-  const response_token = await queries_email.send_recovery_email('justal.kevin.spam@gmail.com')
-  const token = response_token.send_recovery_email
-  t.not(token, 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
-})
-
 test('[USER] Trying to change password with an already used recover token', async t => {
   const response = await queries_user.change_password_user('Qwerty10@10', 'bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb')
   t.is(response.errors[0].message, 'This recover token has already been used or does not exist.')
