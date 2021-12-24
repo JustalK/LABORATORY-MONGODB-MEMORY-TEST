@@ -14,8 +14,7 @@ test.before(async () => {
   await m_seeding.seed('dev')
 })
 
-test('[TEST] A simple test of call', async t => {
+test('[TEST] A simple test of call with dev', async t => {
   const response = await queries_test.get_tests()
-
-  t.is(response.get_tests.length, 10)
+  t.is(response.get_tests.length, 2)
 })
