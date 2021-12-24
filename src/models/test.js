@@ -1,6 +1,6 @@
 /**
-* The models of the user_type
-* @module models/user_type
+* The models of the test
+* @module models/test
 */
 'use strict'
 
@@ -9,14 +9,16 @@ const path = require('path')
 const filename = path.basename(__filename, '.js')
 
 const schema = new mongoose.Schema({
-  name: {
+  value_string: {
     type: String,
-    uppercase: true,
-    trim: true,
     required: true
   },
-  permission_level: {
+  value_number: {
     type: Number,
+    required: true
+  },
+  value_boolean: {
+    type: Boolean,
     required: true
   }
 }, {
@@ -26,10 +28,7 @@ const schema = new mongoose.Schema({
   },
   collection: filename,
   toJSON: { virtuals: true },
-  toObject: { virtuals: true },
-  admin_bro: {
-    listProperties: ['name', 'permission_level']
-  }
+  toObject: { virtuals: true }
 })
 
 module.exports = mongoose.model(filename, schema)

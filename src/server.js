@@ -6,14 +6,8 @@
 
 const express = require('express')
 const voyagerMiddleware = require('graphql-voyager/middleware')
-const fs = require('fs')
-const AdminBro = require('admin-bro')
-const AdminBroExpress = require('@admin-bro/express')
-const AdminBroMongoose = require('@admin-bro/mongoose')
 const apollo = require('@src/apollo')
 const logger = require('@src/libs/logger')
-const crontab = require('@src/crontab/crontab')
-const auth = require('basic-auth')
 
 module.exports = {
   /**
@@ -22,22 +16,6 @@ module.exports = {
   **/
   create_server: () => {
     return express()
-  },
-  /**
-  * Secure the route with a httpaccess password
-  * @return {ExpressRouter} The router of express
-  **/
-  get_secure_router: () => {
-    const express_router = express.Router()
-    express_router.use((request, response, next) => {
-      const user = auth(request)
-      if (!user || process.env.PASSWORD_ADMINBRO !== user.pass || process.env.USERNAME_ADMINBRO !== user.name) {
-        response.set('WWW-Authenticate', 'Basic realm="example"')
-        return response.status(401).send()
-      }
-      return next()
-    })
-    return express_router
   },
   /**
   * Allow us to use Graph QL with fastify
@@ -53,29 +31,6 @@ module.exports = {
   **/
   register_voyager: (server) => {
     server.use(process.env.ENDPOINT_ERD, voyagerMiddleware.express({ endpointUrl: process.env.ENDPOINT }))
-  },
-  /**
-  * Allow us to use the middleware Admin Bro
-  * @param {Express} server The server allowed to use the middleware Admin Bro
-  **/
-  register_adminbro: (server) => {
-    AdminBro.registerAdapter(AdminBroMongoose)
-
-    const models = fs.readdirSync('src/models')
-    const modelsList = models.map(model => {
-      const model_loaded = require('./models/' + model.split('.')[0])
-      return {
-        resource: model_loaded,
-        options: model_loaded.schema.options.admin_bro
-      }
-    })
-
-    const router = AdminBroExpress.buildRouter(new AdminBro({
-      databases: [],
-      resources: modelsList,
-      rootPath: process.env.ENDPOINT_ADMINBRO
-    }), module.exports.get_secure_router())
-    server.use(process.env.ENDPOINT_ADMINBRO, router)
   },
   /**
   * Allow us to use the middleware express status monitor
@@ -100,9 +55,7 @@ module.exports = {
   **/
   start: async (name, host, port) => {
     const server = module.exports.create_server()
-    crontab.start()
 
-    module.exports.register_adminbro(server)
     module.exports.register_graphql(server)
     module.exports.register_voyager(server)
     module.exports.register_monitor(server)
