@@ -4,6 +4,8 @@ require('dotenv').config({ path: './env/.env.test' })
 require('isomorphic-fetch')
 require('module-alias/register')
 
+const { dbConnect, dbDisconnect } = require('@test/libs/mongo')
+
 const test = require('ava')
 const m = require('@src')
 const m_seeding = require('@seeding/seeder')
@@ -11,7 +13,12 @@ const queries_test = require('@test/queries/test')
 
 test.before(async () => {
   await m.start()
-  await m_seeding.seed('dev')
+  const uri = await dbConnect()
+  await m_seeding.seed('dev', uri)
+})
+
+test.after(async () => {
+  await dbDisconnect()
 })
 
 test('[TEST] A simple test of call with dev', async t => {
