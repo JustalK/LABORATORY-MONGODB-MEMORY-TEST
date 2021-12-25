@@ -4,7 +4,7 @@ require('dotenv').config({ path: './env/.env.test' })
 require('isomorphic-fetch')
 require('module-alias/register')
 
-const { dbConnect, dbDisconnect } = require('@test/libs/mongo')
+const mongo = require('@test/libs/mongo')
 
 const test = require('ava')
 const m = require('@src')
@@ -13,16 +13,33 @@ const queries_test = require('@test/queries/test')
 
 test.before(async () => {
   await m.start()
-  const uri = await dbConnect()
-  await m_seeding.seed('tests', uri)
-  // await m_seeding.seed('tests')
 })
 
-test.after(async () => {
-  await dbDisconnect()
+test.beforeEach(async () => {
+  const uri = await mongo.connect()
+  await m_seeding.seed('tests', uri)
+})
+
+test.afterEach(async () => {
+  await mongo.disconnect()
 })
 
 test('[TEST] A simple test of call', async t => {
+  const response = await queries_test.get_tests()
+  t.is(response.get_tests.length, 1)
+})
+
+test('[TEST] A simple test of call 2', async t => {
+  const response = await queries_test.get_tests()
+  t.is(response.get_tests.length, 1)
+})
+
+test('[TEST] A simple test of call 3', async t => {
+  const response = await queries_test.get_tests()
+  t.is(response.get_tests.length, 1)
+})
+
+test('[TEST] A simple test of call 4', async t => {
   const response = await queries_test.get_tests()
   t.is(response.get_tests.length, 1)
 })
