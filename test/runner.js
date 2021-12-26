@@ -9,7 +9,9 @@ const mongo = require('@test/libs/mongo')
 const test = require('ava')
 const m = require('@src')
 const m_seeding = require('@seeding/seeder')
-const queries_test = require('@test/queries/test')
+
+const test_0 = require('@test/cases/test_0')
+const test_1 = require('@test/cases/test_1')
 
 test.before(async () => {
   await m.start()
@@ -17,14 +19,12 @@ test.before(async () => {
 
 test.beforeEach(async () => {
   const uri = await mongo.connect()
-  await m_seeding.seed('dev', uri)
+  await m_seeding.seed('tests', uri)
 })
 
 test.afterEach(async () => {
   await mongo.disconnect()
 })
 
-test('[TEST] A simple test of call with dev', async t => {
-  const response = await queries_test.get_tests()
-  t.is(response.get_tests.length, 2)
-})
+test_1.cases(test)
+test_0.cases(test)

@@ -82,7 +82,8 @@
     "files": [
       "test/**/*",
       "!test/libs",
-      "!test/queries"
+      "!test/queries",
+      "!test/cases"
     ]
   },
   "private": true,
