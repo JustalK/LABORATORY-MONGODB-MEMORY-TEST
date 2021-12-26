@@ -8,7 +8,7 @@ module.exports = {
     return m_utils.getter({
       query: `
         mutation {
-          edit_test_by_id(value_string: "${value_string}", value_number: ${value_number}, value_boolean: ${value_boolean}) {
+          add_test(value_string: "${value_string}", value_number: ${value_number}, value_boolean: ${value_boolean}) {
             value_number
             value_string
             value_boolean

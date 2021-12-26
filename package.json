@@ -83,6 +83,7 @@
       "test/**/*",
       "!test/libs",
       "!test/queries",
+      "!test/mutations",
       "!test/cases"
     ]
   },

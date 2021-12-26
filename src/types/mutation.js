@@ -10,6 +10,6 @@ module.exports = gql`
       "The number value"
       value_number: Int,
       "The boolean value"
-      value_boolean: Boolean): Boolean
+      value_boolean: Boolean): Test
   }
 `
