@@ -16,6 +16,10 @@ module.exports = gql`
   """
   type Test {
     """
+    The id
+    """
+    _id: String!
+    """
     A random integer
     """
     value_number: Int!

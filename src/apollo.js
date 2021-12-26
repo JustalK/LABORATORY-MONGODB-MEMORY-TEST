@@ -42,14 +42,23 @@ module.exports = {
     return module.exports.get_services('src/services/queries')
   },
   /**
+  * Get the mutation from the services
+  * @return {Object} Return The mutations
+  **/
+  get_mutations: () => {
+    return module.exports.get_services('src/services/mutations')
+  },
+  /**
   * Get the resolvers from the services directory
   * @return {Object} Return The resolver
   **/
   get_resolvers: () => {
     const queries = module.exports.get_queries()
+    const mutations = module.exports.get_mutations()
 
     const resolvers = {
-      Query: queries
+      Query: queries,
+      Mutation: mutations
     }
     return resolvers
   },

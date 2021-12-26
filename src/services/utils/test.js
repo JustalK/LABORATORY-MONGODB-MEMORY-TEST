@@ -17,5 +17,11 @@ module.exports = {
   **/
   get_tests: async () => {
     return dbs.get_all()
+  },
+  /**
+  * Return all the Test
+  **/
+  add_test: async (obj) => {
+    return dbs.insert(obj)
   }
 }

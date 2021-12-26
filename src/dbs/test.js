@@ -15,5 +15,13 @@ module.exports = {
   **/
   get_all: () => {
     return model.find()
+  },
+  /**
+  * Call mongodb for adding an user to the database
+  * @param {Test} test The test to add to the database
+  * @return {Test} The test added with the id
+  **/
+  insert: (test) => {
+    return model.create(test)
   }
 }
