@@ -1,35 +1,39 @@
-# SERVER-API
+# LABORATORY-MONGODB-MEMORY-TEST
 
-[![Travis](https://img.shields.io/travis/com/justalk/server-api.svg?style=flat-square)](https://travis-ci.com/github/JustalK/server-api)
-[![Coverage Status](https://coveralls.io/repos/github/JustalK/SERVER-API/badge.svg?branch=master)](https://coveralls.io/github/JustalK/SERVER-API?branch=master)
-[![Maintainability](https://api.codeclimate.com/v1/badges/7e6edeed2150efaa35bd/maintainability)](https://codeclimate.com/github/JustalK/SERVER-API/maintainability)
-[![Test Coverage](https://api.codeclimate.com/v1/badges/7e6edeed2150efaa35bd/test_coverage)](https://codeclimate.com/github/JustalK/SERVER-API/test_coverage)
+When you run test using a mongodb database for testing, you will encountered multiple problems such as :
 
-This project is a fresh starter for creating a **REST API** with all my favorite tools.
+- **Rapidity of execution:** The time it takes to run the test
+- **Reliability and Avoiding Dependencies between tests:** Setting up the database with a fixed set of data for each test case
 
-The server is using the library `Express` but it can be switch easily in the **server.js** file for Fastify or Restify. The server is linked to the library `Apollo-server` for managing the data with `GraphQL`. The database is handle by `MongoDB` and can also be easily switch in **database.js**.
+Few weeks ago, I have discovered `mongodb-memory-server` which give the ability to run all the mongodb call in memory. With this package setup, we can start with a setup database using `mongo-seeding` and clear the db at each test in a fraction of second.
 
-The models are found in the folder **models**. Their schema are described with `mongoose` and also typed for using `GraphQL`.
-
-The continuous integration is handled with `Travis` and the coverage is checked by `Coveralls` and `Codeclimate` for checking the level of maintainability of the code. Finally, I use `Ava` for making the test cases. For fixing the style, I use `Eslint`.
-
-Before committing, `Husky` will force the tests to be run and will validate or not the new push.
+This project show how to setup the seeding with a mongodb running in memory.
+For also pushing it further, I find a way to run the server only once for all the tests.
 
 ## Plan of the presentation
 
 I explain with all the details how I build the project and my way of working.
 
-1. [ERD](#erd)
-2. [Documentation](#documentation)
-3. [Organization](#organization)
-4. [Development](#development)
-5. [Seeding](#seeding)
-6. [Testing](#testing)
-7. [Admin](#admin)
-8. [Monitoring](#monitoring)
-9. [Security](#security)
-10. [Running](#running)
-11. [Deployment](#deployment)
+- [Technologies](#technologies)
+- [ERD](#erd)
+- [Documentation](#documentation)
+- [Organization](#organization)
+- [Development](#development)
+- [Seeding](#seeding)
+- [Testing](#testing)
+- [Admin](#admin)
+- [Monitoring](#monitoring)
+- [Security](#security)
+- [Running](#running)
+- [Deployment](#deployment)
+
+## Technologies
+
+The server is using the library `Express` but it can be switch easily in the **server.js** file for Fastify or Restify. The server is linked to the library `Apollo-server` for managing the data with `GraphQL`. The database is handle by `MongoDB` and can also be easily switch in **database.js**.
+
+The models are found in the folder **models**. Their schema are described with `mongoose` and also typed for using `GraphQL`.
+
+For the test, I am using `Ava`, `mongo-seeding` for setting up the database and `mongodb-memory-server` for running the database in memory.
 
 ## ERD
 
@@ -142,56 +146,14 @@ A html doc will be then found inside the directory **/doc/schema**.
 * **nyc**: Istanbul's state of the art command line interface. I use it for creating the report for the coverall and making it available in the browser.
 
 
-#### Environment variables
+#### How to setup the mongodb-memory
 
-The environment variable are not present in the project but can be found in the `travis.yaml`. Most of them are visible but some are encrypted for Travis to perform his tests.
+For setting up the memory package for the test, you need to follow those step :
 
-For encrypting the variables, you will need Travis :
-
-```
-gem install travis
-```
-
-Then you will need to connect your GitHub account to it. I recommend using GitHub-token.
-
-```
-travis login --github-token my_token
-```
-
-Where **my_token** is the token you will have generated in `https://github.com/settings/tokens`
-
-For encrypting a value, you just need to use the following command :
-
-```
-travis encrypt KEY="value"
-```
-
-or for an entire file :
-
-```
-travis encrypt-file ./xxx_filename --add
-```
-
-#### Build email
-
-The email are build with `heml` and `Mustache`. They can be build easily with the following command :
-
-```
-npm run build:emails
-```
-
-#### Adding new request
-
-The mutations, directives and queries are dynamically added to the graph. For adding a new request, you need to follow the logic under :
-
-- Create a new file in **services** inside the folder **directives**, **mutations** or **queries** depending of your need.
-- Those files will be automatically added by the file **apollo.js**.
-- Add the new request into the directives, mutations or queries types inside the folder **types**.
-- Depedning of your need you might need to create a file inside the **dbs** folder.
-
-#### Pre-commit
-
-`Husky` has been installed and will prevent to push any code that break the project.
+- Make sure when you run the server, the mongodb database runs depending of the environment. In test environment, the database should not be started since we will be using the memory database.
+- Create a mongodb memory package such as inside the file: `test/cases/libs/mongodb.js`
+- Then put inside the beforeEach and afterEach, the connection and deconnection to the memory database such as in the file: `test/runner.js`
+- Now, if you run the test, all test should work independently.
 
 ## Seeding
 
