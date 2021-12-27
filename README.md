@@ -14,6 +14,7 @@ For also pushing it further, I find a way to run the server only once for all th
 
 I explain with all the details how I build the project and my way of working.
 
+- [Settings: How to setup mongodb](#settings)
 - [Technologies](#technologies)
 - [ERD](#erd)
 - [Documentation](#documentation)
@@ -26,6 +27,16 @@ I explain with all the details how I build the project and my way of working.
 - [Security](#security)
 - [Running](#running)
 - [Deployment](#deployment)
+
+#### Settings
+
+For setting up the memory package for the test, you need to follow those step :
+
+- Make sure when you run the server, the mongodb database runs depending of the environment. In test environment, the database should not be started since we will be using the memory database.
+- Create a mongodb memory package such as inside the file: `test/cases/libs/mongodb.js`
+- Then put inside the beforeEach and afterEach, the connection and deconnection to the memory database such as in the file: `test/runner.js`
+- Now, if you run the test, all test should work independently.
+
 
 ## Technologies
 
@@ -144,16 +155,6 @@ A html doc will be then found inside the directory **/doc/schema**.
 * **mongo-seeding**: The ultimate solution for populating your MongoDB database. I use it for populating the test database and also for populating the server at first installation.
 * **npx**: Executes <command> either from a local node_modules/.bin, or from a central cache, installing any packages needed in order for <command> to run. I use it for running package from my local node module directory such as esLint.
 * **nyc**: Istanbul's state of the art command line interface. I use it for creating the report for the coverall and making it available in the browser.
-
-
-#### How to setup the mongodb-memory
-
-For setting up the memory package for the test, you need to follow those step :
-
-- Make sure when you run the server, the mongodb database runs depending of the environment. In test environment, the database should not be started since we will be using the memory database.
-- Create a mongodb memory package such as inside the file: `test/cases/libs/mongodb.js`
-- Then put inside the beforeEach and afterEach, the connection and deconnection to the memory database such as in the file: `test/runner.js`
-- Now, if you run the test, all test should work independently.
 
 ## Seeding
 
